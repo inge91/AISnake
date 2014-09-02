@@ -10,7 +10,7 @@
 
 // TODO: COnstruct freespace matrix to deliver to changepos in food object
 Board::Board(string location)
-	:snake(2, 2), food(4, 4)
+	:snake(6,5), food(1,1)
 {
 	obstacle = SDL_util::load_bmp("../Images/obstacle.bmp");
 	load_obstacles(location);

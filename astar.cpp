@@ -65,8 +65,8 @@ bool goal_reached(pair<int, int> p1, pair<int, int> p2)
 int calculate_cost(pair<int, int> p1, pair<int, int> p2)
 {
 
-	return min(abs(p1.first - p2.first), abs(WINDOW_WIDTH/UNIT_SIZE - p1.first - p2.first)) + 
-		min(abs(p1.second - p2.second), abs(WINDOW_HEIGHT / UNIT_SIZE - p1.second - p2.second));
+	return min(abs(p1.first - p2.first), abs(WINDOW_WIDTH/UNIT_SIZE - abs(p1.first - p2.first))) + 
+		min(abs(p1.second - p2.second), abs(WINDOW_HEIGHT / UNIT_SIZE - abs(p1.second - p2.second)));
 }
 
 vector<pair<int, int>> get_moves(pair<int, int> p, vector<pair<int, int>> obstacles)
