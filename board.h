@@ -29,11 +29,13 @@ public:
 	void handle_collision();
 	void move_snakes();
 	void assign_movement(SDL_Keycode k);
+	void print_positions();
 
 private:
 	SDL_Surface* obstacle;
 	void load_obstacles(string location);
 	vector<pair<int, int>> get_unoccupied();
+
 };
 
 #endif

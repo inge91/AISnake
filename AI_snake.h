@@ -8,9 +8,11 @@ class AI_snake : public Snake
 {
 public:
 
-	AI_snake(int x, int y);
+	AI_snake(int x, int y, int b);
 	vector<pair<int, int>> solution;
 	void assign_direction(SDL_Keycode k, pair<int, int> f, vector<pair<int, int>> obstacles);
+private:
+	void apply_direction(vector<pair<int, int>> s);
 };
 
 #endif

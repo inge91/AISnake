@@ -1,20 +1,35 @@
 #include "snake.h"
 
-Snake::Snake()
+Snake::Snake(int b)
 {
 	d = NONE;
 	// Set the snake image
-	img = SDL_util::load_bmp("../Images/snake_body.bmp");
+	switch (b)
+	{
+	case 1:
+		img = SDL_util::load_bmp("../Images/snake_body.bmp");
+		break;
+	case 2:
+		img = SDL_util::load_bmp("../Images/snake_body2.bmp");
+	}
 	// Initialize snake position
 	pair <int, int> p(15, 15);
 	body.push_back(p);
 }
 
-Snake::Snake(int x, int y)
+Snake::Snake(int x, int y, int b)
 {
 	d = NONE;
 	// Set the snake image
-	img = SDL_util::load_bmp("../Images/snake_body.bmp");
+	switch (b)
+	{
+	case 1:
+		img = SDL_util::load_bmp("../Images/snake_body.bmp");
+		break;
+	case 2:
+		img = SDL_util::load_bmp("../Images/snake_body2.bmp");
+	}
+
 	// Initialize snake position
 	pair <int, int> p(x, y);
 	body.push_back(p);

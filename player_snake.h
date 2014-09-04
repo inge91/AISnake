@@ -10,7 +10,7 @@
 class Player_snake : public Snake
 {
 public:
-	Player_snake(int x, int y);
+	Player_snake(int x, int y, int b);
 	void assign_direction(SDL_Keycode k, pair<int, int> f, vector<pair<int, int>> obstacles);
 
 private:

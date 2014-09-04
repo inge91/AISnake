@@ -10,11 +10,11 @@
 
 // TODO: COnstruct freespace matrix to deliver to changepos in food object
 Board::Board(string location)
-	:s(8, 5), food(9, 4), p(9, 5)
+	:s(1,1, 1), food(2, 2), p(9, 5, 2)
 {
 
 	snakes.push_back(&s);
-	//snakes.push_back(s2);
+	snakes.push_back(&p);
 	obstacle = SDL_util::load_bmp("../Images/obstacle.bmp");
 	load_obstacles(location);
 }
@@ -47,12 +47,15 @@ void Board::draw_board(SDL_Surface* surface)
 		SDL_BlitSurface(obstacle, NULL, surface, SDL_util::create_rect(obstacles.at(i).first * UNIT_SIZE, obstacles.at(i).second * UNIT_SIZE, UNIT_SIZE, UNIT_SIZE));
 	}
 
+	food.draw_food(surface);
+
 	for (Snake *snake : snakes)
 	{
+		snake->print_body();
 		snake->draw_snake(surface);
 	}
 
-	food.draw_food(surface);
+
 }
 
 // Detect collisions between elements on the board
@@ -81,7 +84,7 @@ void Board::handle_collision()
 		if (snake->check_self_collision() || snake->check_collision(b))
 		{
 			cout << "I killed myself" << endl;
-			SDL_Delay(10000);
+			SDL_Delay(99999);
 		}
 
 		// Check if it hit a pellet
@@ -120,8 +123,6 @@ vector<pair<int, int>> Board::get_unoccupied()
 	return unoccupied;
 }
 
-
-
 void Board::assign_movement(SDL_Keycode k)
 {
 	vector<pair<int, int>> b(obstacles);
@@ -131,7 +132,6 @@ void Board::assign_movement(SDL_Keycode k)
 	}
 	for (Snake *snake : snakes)
 	{
-	
 		snake->assign_direction(k, food.pos, b);
 	}
 }
@@ -143,4 +143,14 @@ void Board::move_snakes()
 	{
 		snake->move();
 	}
+}
+
+// Print position of each of the snakes
+void Board::print_positions()
+{
+	for (Snake *snake : snakes)
+	{
+		cout << "head pos: " << snake->body.at(0).first << " " << snake->body.at(0).second << endl;
+	}
+	cout << endl;
 }

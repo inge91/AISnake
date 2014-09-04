@@ -1,7 +1,7 @@
 #include "AI_snake.h"
 
-AI_snake::AI_snake(int x, int y)
-	:Snake(x, y), solution(){}
+AI_snake::AI_snake(int x, int y, int b)
+	:Snake(x, y, b), solution(){}
 
 // Always calculate current solution, but each time that assign direction is called
 // check how safe current solution is and replan in case necessary (some cost threshold perhaps?)
@@ -17,41 +17,59 @@ void AI_snake::assign_direction(SDL_Keycode k, pair<int, int> f, vector<pair<int
 	// - there is no active solution
 	// - the food pellet changed position
 	// - current solution is infeasible (other snakes got in the way)
-	if (solution.size() == 0 || !goal_reached(solution.at(solution.size() - 1), f))
+	//	RIGHT NOW WE PLAN EVERY STEP
+	solution = solve(current, f, obstacles);
+
+	// in case other snakes are way closer or (TODO)
+	// we took too long to find a solution (there is no current path
+	if (solution.size() == 0)
 	{
-
-
-		solution = solve(current, f, obstacles);
-
-
-		// in case other snakes are way closer or
-		// we took too long to find a solution (there is no current path
-		if (solution.size() == 0)
+		// Just take a random position
+		if (!pair_in_vector(pair<int, int>(current.first - 1, current.second), obstacles))
 		{
-			cout << "We should plan a different action to take" << endl;
+			cout << "Go left" << endl;
+			d = LEFT;
 		}
+		if (!pair_in_vector(pair<int, int>(current.first + 1, current.second), obstacles))
+		{
+			cout << "Go r" << endl;
+			d = RIGHT;
+		}
+		if (!pair_in_vector(pair<int, int>(current.first , current.second + 1), obstacles))
+		{
+			cout << "Go d" << endl;
+			d = DOWN;
+		}
+		if (!pair_in_vector(pair<int, int>(current.first, current.second - 1), obstacles))
+		{
+			cout << "Go u" << endl;
+			d = UP;
+		}
+		cout << "New solution!" <<solution.size()<< endl;
 	}
-	cout << endl;
+	else
+	{
+		apply_direction(solution);
+	}
 
-	if (!goal_reached(solution.at(0), body.at(0)))
+}
+
+void AI_snake::apply_direction(vector<pair<int, int>> s)
+{
+
+	pair<int, int> current = body.at(0);
+
+	if (!goal_reached(s.at(0), body.at(0)))
 	{
-		solution.erase(solution.begin());
+		s.erase(s.begin());
 	}
-	/*
-	cout << "solution size: " << solution.size() << endl;
-	for (int i = 0; i < solution.size(); i++)
-	{
-		cout << solution.at(i).first << " " << solution.at(i).second << endl;
-	}
-	cout << "Current: " << current.first << " " << current.second << endl;
-	cout << "Second: " << solution.at(1).first << " " << solution.at(1).second << endl;
-	*/
+
 	// Change direction depending on the first next movement
-	if (solution.at(1).first != current.first)
+	if (s.at(1).first != current.first)
 	{
 		if (current.first == 0)
 		{
-			if (solution.at(1).first == 1)
+			if (s.at(1).first == 1)
 			{
 				d = RIGHT;
 			}
@@ -60,9 +78,9 @@ void AI_snake::assign_direction(SDL_Keycode k, pair<int, int> f, vector<pair<int
 				d = LEFT;
 			}
 		}
-		else if (current.first == (WINDOW_WIDTH/UNIT_SIZE)-1)
+		else if (current.first == (WINDOW_WIDTH / UNIT_SIZE) - 1)
 		{
-			if (solution.at(1).first == 0)
+			if (s.at(1).first == 0)
 			{
 				d = RIGHT;
 			}
@@ -71,7 +89,7 @@ void AI_snake::assign_direction(SDL_Keycode k, pair<int, int> f, vector<pair<int
 				d = LEFT;
 			}
 		}
-		else if (solution.at(1).first > current.first)
+		else if (s.at(1).first > current.first)
 		{
 			d = RIGHT;
 		}
@@ -80,11 +98,11 @@ void AI_snake::assign_direction(SDL_Keycode k, pair<int, int> f, vector<pair<int
 			d = LEFT;
 		}
 	}
-	if (solution.at(1).second != current.second)
+	if (s.at(1).second != current.second)
 	{
 		if (current.second == 0)
 		{
-			if (solution.at(1).second == 1)
+			if (s.at(1).second == 1)
 			{
 				d = DOWN;
 			}
@@ -95,7 +113,7 @@ void AI_snake::assign_direction(SDL_Keycode k, pair<int, int> f, vector<pair<int
 		}
 		else if (current.second == (WINDOW_HEIGHT / UNIT_SIZE) - 1)
 		{
-			if (solution.at(1).second == 0)
+			if (s.at(1).second == 0)
 			{
 				d = DOWN;
 			}
@@ -104,7 +122,7 @@ void AI_snake::assign_direction(SDL_Keycode k, pair<int, int> f, vector<pair<int
 				d = UP;
 			}
 		}
-		else if (solution.at(1).second > current.second)
+		else if (s.at(1).second > current.second)
 		{
 			d = DOWN;
 		}

@@ -45,10 +45,8 @@ int main()
 					quit = true;
 				}
 			}
-	
-			//detect_collision(&s, &f);
-			b.draw_board(gScreenSurface);
-			SDL_UpdateWindowSurface(gWindow);
+			
+
 			Uint32 passed_t = SDL_GetTicks();
 		
 			if ((passed_t - t) < (1000 / FRAME_RATE))
@@ -62,8 +60,11 @@ int main()
 				// move snakes
 				snake_speed = passed_t;
 				b.move_snakes();
+				b.draw_board(gScreenSurface);
+				SDL_UpdateWindowSurface(gWindow);
+				b.print_positions();
+				b.handle_collision();
 			}
-			b.handle_collision();
 		}
 	}
 	SDL_util::close(gWindow, gScreenSurface);

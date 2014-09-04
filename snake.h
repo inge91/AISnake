@@ -14,8 +14,8 @@ class Snake
 public:
 	enum direction { UP, DOWN, LEFT, RIGHT, NONE };
 	direction d;
-	Snake();
-	Snake(int x, int y);
+	Snake(int b);
+	Snake(int x, int y, int b);
 	SDL_Surface* img;
 	// Snake has a vector containing body parts
 	vector<pair<int, int>> body;

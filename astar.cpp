@@ -32,7 +32,7 @@ vector<pair<int, int>> solve(pair<int, int> begin, pair<int, int> goal, vector<p
 
 	vector<pair<int, int>> evaluated;
 	priority_queue < pair<int, vector<pair <int, int>>>, vector < pair<int, vector<pair<int, int>>>>, compare> to_evaluate;
-
+	
 	int g = 0;
 	int f = g + calculate_cost(begin, goal);
 	//pair<int, vector<pair<int, int>>>pair (f, vector<pair<int, int>>(1, begin));
@@ -43,18 +43,22 @@ vector<pair<int, int>> solve(pair<int, int> begin, pair<int, int> goal, vector<p
 	while (to_evaluate.size() > 0)
 	{
 		expanded_nodes += 1;
+	
 		// Pop position with lowest value
 		pair<int, vector<pair<int, int>>> p = to_evaluate.top();
-
+		evaluated.push_back(p.second.at(p.second.size() - 1));
 		to_evaluate.pop();
-		if (expanded_nodes == 100)
+		if (expanded_nodes == 9999999)
 		{
-			return vector<pair<int, int>>();
+			//cout << "Total expanded nodes: " << expanded_nodes << endl;
+			//return vector<pair<int, int>>();
+			return p.second;
 		}
 		// Check if destination is reached
 		if (goal_reached(p.second.at(p.second.size()-1), goal))
 		{
-			cout << "Total expanded nodes: " << expanded_nodes << endl;
+			//cout << "Total expanded nodes: " << expanded_nodes << endl;
+			//cout << evaluated.at(0).first << endl;
 			return p.second;
 		}
 		else
@@ -63,17 +67,19 @@ vector<pair<int, int>> solve(pair<int, int> begin, pair<int, int> goal, vector<p
 			vector<pair<int, int>> moves = get_moves(p.second.at(p.second.size() -1), obstacles);
 			for (const pair<int, int>& move : moves)
 			{
-				if (!pair_in_vector(move, p.second))
+				if (!pair_in_vector(move, evaluated))
 				{
 					
 					vector<pair<int, int>> temp(p.second);
 					temp.push_back(move);
+					evaluated.push_back(move);
 					int new_f = calculate_cost(move, goal);
 					to_evaluate.push(pair<int, vector<pair<int, int>>>(p.second.size() + new_f, temp));	
 				}
 			}
 		}
 	}
+	return vector<pair<int, int>>();
 }
 
 bool goal_reached(pair<int, int> p1, pair<int, int> p2)
@@ -88,7 +94,7 @@ bool goal_reached(pair<int, int> p1, pair<int, int> p2)
 int calculate_cost(pair<int, int> p1, pair<int, int> p2)
 {
 
-	return min(abs(p1.first - p2.first), abs(WINDOW_WIDTH/UNIT_SIZE - abs(p1.first - p2.first))) + 
+	return min(abs(p1.first - p2.first),abs(WINDOW_WIDTH/UNIT_SIZE - abs(p1.first - p2.first))) + 
 		min(abs(p1.second - p2.second), abs(WINDOW_HEIGHT / UNIT_SIZE - abs(p1.second - p2.second)));
 }
 
