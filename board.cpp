@@ -10,8 +10,11 @@
 
 // TODO: COnstruct freespace matrix to deliver to changepos in food object
 Board::Board(string location)
-	:snake(6,5), food(1,1)
+	:s(8, 5), food(9, 4), p(9, 5)
 {
+
+	snakes.push_back(&s);
+	//snakes.push_back(s2);
 	obstacle = SDL_util::load_bmp("../Images/obstacle.bmp");
 	load_obstacles(location);
 }
@@ -44,30 +47,51 @@ void Board::draw_board(SDL_Surface* surface)
 		SDL_BlitSurface(obstacle, NULL, surface, SDL_util::create_rect(obstacles.at(i).first * UNIT_SIZE, obstacles.at(i).second * UNIT_SIZE, UNIT_SIZE, UNIT_SIZE));
 	}
 
-	snake.draw_snake(surface);
+	for (Snake *snake : snakes)
+	{
+		snake->draw_snake(surface);
+	}
+
 	food.draw_food(surface);
 }
 
 // Detect collisions between elements on the board
 void Board::handle_collision()
 {
-	// Get head of the snake
-	pair<int, int> head = snake.body.at(0);
-
-	// Check if snake hits its body or other boundaries
-	if (snake.check_self_collision() || snake.check_collision(obstacles))
+	for (Snake *snake : snakes)
 	{
-		cout << "I killed myself" << endl;
-		SDL_Delay(10000);
-	}
+		// Get head of the snake
+		pair<int, int> head = snake->body.at(0);
 
-	// Check if it hit a pellet
-	if (food.pos.first == head.first && food.pos.second == head.second)
-	{
-		// Add an extra element to the snake
-		snake.grow();
-		// Change pellet position
-		food.change_pos(get_unoccupied());
+		vector<pair<int, int>> b(obstacles);
+		for (Snake *snake2 : snakes)
+		{
+		
+			if (snake2 == snake)
+			{
+				continue;
+			}
+			else
+			{
+				b.insert(b.end(), snake2->body.begin(), snake2->body.end());
+			}
+		}
+
+		// Check if snake hits its body or other boundaries
+		if (snake->check_self_collision() || snake->check_collision(b))
+		{
+			cout << "I killed myself" << endl;
+			SDL_Delay(10000);
+		}
+
+		// Check if it hit a pellet
+		if (food.pos.first == head.first && food.pos.second == head.second)
+		{
+			// Add an extra element to the snake
+			snake->grow();
+			// Change pellet position
+			food.change_pos(get_unoccupied());
+		}
 	}
 }
 
@@ -77,8 +101,11 @@ vector<pair<int, int>> Board::get_unoccupied()
 	vector<pair<int, int>>unoccupied;
 	// Combine static and dynamic obstacles
 	vector<pair<int, int>> b(obstacles);
-	b.insert(b.end(), snake.body.begin(), snake.body.end());
 
+	for (Snake *snake : snakes)
+	{
+		b.insert(b.end(), snake->body.begin(), snake->body.end());
+	}
 	// Loop through board position and add pos in case it does not belong to obstacles
 	for (int i = 0; i < WINDOW_WIDTH / UNIT_SIZE; i++)
 	{
@@ -98,12 +125,22 @@ vector<pair<int, int>> Board::get_unoccupied()
 void Board::assign_movement(SDL_Keycode k)
 {
 	vector<pair<int, int>> b(obstacles);
-	b.insert(b.end(), snake.body.begin(), snake.body.end());
-	snake.assign_direction(k, food.pos, b);
+	for (Snake *snake : snakes)
+	{
+		b.insert(b.end(), snake->body.begin(), snake->body.end());
+	}
+	for (Snake *snake : snakes)
+	{
+	
+		snake->assign_direction(k, food.pos, b);
+	}
 }
 
 // Moves the snakes on the board a single position
 void Board::move_snakes()
 {
-	snake.move();
+	for (Snake *snake : snakes)
+	{
+		snake->move();
+	}
 }

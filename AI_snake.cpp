@@ -13,9 +13,23 @@ void AI_snake::assign_direction(SDL_Keycode k, pair<int, int> f, vector<pair<int
 
 	// In case there is not yet a solution or in case the goal changed OR TODO: if path is too risky
 	// recalculate a solution
+	// Plan a new solution in any of these cases:
+	// - there is no active solution
+	// - the food pellet changed position
+	// - current solution is infeasible (other snakes got in the way)
 	if (solution.size() == 0 || !goal_reached(solution.at(solution.size() - 1), f))
 	{
+
+
 		solution = solve(current, f, obstacles);
+
+
+		// in case other snakes are way closer or
+		// we took too long to find a solution (there is no current path
+		if (solution.size() == 0)
+		{
+			cout << "We should plan a different action to take" << endl;
+		}
 	}
 	cout << endl;
 

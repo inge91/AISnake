@@ -20,7 +20,7 @@ Food::Food(int x, int y)
 //FIXME: This should only consider empty slots on the board
 void Food::change_pos(vector<pair<int, int>> candidates)
 {
-	pos = candidates.at(rand() % candidates.size()-1);
+	pos = candidates.at(rand() % candidates.size());
 }
 
 

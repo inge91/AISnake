@@ -5,16 +5,32 @@ struct compare
 {
 	bool operator()(const pair<int, vector<pair<int, int>>> l, const pair<int, vector<pair<int, int>>> r)
 	{
-		return l.first > r.first;
+		if (l.first > r.first)
+			return true;
+		if (l.first == r.first)
+		{
+			if (l.second.size() < r.second.size())
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+			return false;
+		}
 	}
 };
 
+int expanded_nodes = 0;
+// TODO: in case amount of expanded nodes gets too high, we shall have to create some kind of 
 vector<pair<int, int>> solve(pair<int, int> begin, pair<int, int> goal, vector<pair<int, int>> obstacles)
 {
 
-	
 	vector<pair<int, int>> evaluated;
-	
 	priority_queue < pair<int, vector<pair <int, int>>>, vector < pair<int, vector<pair<int, int>>>>, compare> to_evaluate;
 
 	int g = 0;
@@ -23,16 +39,22 @@ vector<pair<int, int>> solve(pair<int, int> begin, pair<int, int> goal, vector<p
 	vector<pair<int, int>> v(1, begin);
 	pair<int, vector<pair<int, int>>> gg(f, v);
 	to_evaluate.push(gg);
-	
+	expanded_nodes = 0;
 	while (to_evaluate.size() > 0)
 	{
+		expanded_nodes += 1;
 		// Pop position with lowest value
 		pair<int, vector<pair<int, int>>> p = to_evaluate.top();
 
 		to_evaluate.pop();
+		if (expanded_nodes == 100)
+		{
+			return vector<pair<int, int>>();
+		}
 		// Check if destination is reached
 		if (goal_reached(p.second.at(p.second.size()-1), goal))
 		{
+			cout << "Total expanded nodes: " << expanded_nodes << endl;
 			return p.second;
 		}
 		else
@@ -43,6 +65,7 @@ vector<pair<int, int>> solve(pair<int, int> begin, pair<int, int> goal, vector<p
 			{
 				if (!pair_in_vector(move, p.second))
 				{
+					
 					vector<pair<int, int>> temp(p.second);
 					temp.push_back(move);
 					int new_f = calculate_cost(move, goal);

@@ -20,8 +20,10 @@ class Board
 public:
 	Board(string location);
 	vector<pair<int, int>> obstacles;
-	AI_snake snake;
+	vector<Snake*> snakes;
 	Food food;
+	AI_snake s;
+	Player_snake p;
 	void draw_board(SDL_Surface* surface);
 	void update_board();
 	void handle_collision();
