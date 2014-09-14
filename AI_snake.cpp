@@ -1,7 +1,7 @@
 #include "AI_snake.h"
 
-AI_snake::AI_snake(int x, int y, int b)
-	:Snake(x, y, b), solution(){}
+AI_snake::AI_snake(int x, int y, SDL_Color c)
+	:Snake(x, y, c), solution(){}
 
 // Always calculate current solution, but each time that assign direction is called
 // check how safe current solution is and replan in case necessary (some cost threshold perhaps?)
@@ -27,25 +27,20 @@ void AI_snake::assign_direction(SDL_Keycode k, pair<int, int> f, vector<pair<int
 		// Just take a random position
 		if (!pair_in_vector(pair<int, int>(current.first - 1, current.second), obstacles))
 		{
-			cout << "Go left" << endl;
 			d = LEFT;
 		}
 		if (!pair_in_vector(pair<int, int>(current.first + 1, current.second), obstacles))
 		{
-			cout << "Go r" << endl;
 			d = RIGHT;
 		}
 		if (!pair_in_vector(pair<int, int>(current.first , current.second + 1), obstacles))
 		{
-			cout << "Go d" << endl;
 			d = DOWN;
 		}
 		if (!pair_in_vector(pair<int, int>(current.first, current.second - 1), obstacles))
 		{
-			cout << "Go u" << endl;
 			d = UP;
 		}
-		cout << "New solution!" <<solution.size()<< endl;
 	}
 	else
 	{

@@ -1,7 +1,7 @@
 #include "player_snake.h"
 
-Player_snake::Player_snake(int x, int y, int b)
-:Snake(x, y, b)
+Player_snake::Player_snake(int x, int y, SDL_Color c)
+:Snake(x, y, c)
 {
 	keys.insert(pair<SDL_Keycode, Snake::direction>(SDLK_UP, UP));
 	keys.insert(pair<SDL_Keycode, Snake::direction>(SDLK_DOWN, DOWN));

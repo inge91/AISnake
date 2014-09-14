@@ -10,13 +10,30 @@
 
 // TODO: COnstruct freespace matrix to deliver to changepos in food object
 Board::Board(string location)
-	:s(1,1, 1), food(2, 2), p(9, 5, 2)
+	:food(2, 2)
 {
-
-	snakes.push_back(&s);
-	snakes.push_back(&p);
-	obstacle = SDL_util::load_bmp("../Images/obstacle.bmp");
+	SDL_Color c;
+	c.r = 255;
+	c.g = 0;
+	c.b = 0;
+	c.a = 255;
+	AI_snake *s = new AI_snake(1, 1, c);
+	c.r = 0;
+	c.g = 255;
+	Player_snake *p = new Player_snake(9, 5, c);
+	snakes.push_back(s);
+	snakes.push_back(p);
+	
 	load_obstacles(location);
+}
+
+Board::~Board()
+{
+	// Delete snakes
+	for (Snake* s : snakes)
+	{
+		delete(s);
+	}
 }
 
 // Loads the position of the obstacles
@@ -37,22 +54,22 @@ void Board::load_obstacles(string location)
 	infile.close();
 }
 
-void Board::draw_board(SDL_Surface* surface)
+void Board::draw_board(SDL_Renderer* renderer)
 {
-	SDL_FillRect(surface, NULL, 0x000000);
-
 	// Draw all obstacles 
 	for (int i = 0; i < obstacles.size(); i++)
 	{
-		SDL_BlitSurface(obstacle, NULL, surface, SDL_util::create_rect(obstacles.at(i).first * UNIT_SIZE, obstacles.at(i).second * UNIT_SIZE, UNIT_SIZE, UNIT_SIZE));
+		
+		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+		SDL_RenderFillRect(renderer, SDL_util::create_rect(obstacles.at(i).first * UNIT_SIZE, obstacles.at(i).second * UNIT_SIZE, UNIT_SIZE, UNIT_SIZE));
 	}
 
-	food.draw_food(surface);
+	food.draw_food(renderer);
 
 	for (Snake *snake : snakes)
 	{
 		snake->print_body();
-		snake->draw_snake(surface);
+		snake->draw_snake(renderer);
 	}
 
 
@@ -69,7 +86,6 @@ void Board::handle_collision()
 		vector<pair<int, int>> b(obstacles);
 		for (Snake *snake2 : snakes)
 		{
-		
 			if (snake2 == snake)
 			{
 				continue;
@@ -129,6 +145,14 @@ void Board::assign_movement(SDL_Keycode k)
 	for (Snake *snake : snakes)
 	{
 		b.insert(b.end(), snake->body.begin(), snake->body.end());
+
+		// Make snake less suicidal
+		switch (snake->d)
+		{
+		UP:
+			b.push_back(pair<int, int>(snake->body.at(0).first, snake->body.at(0).second));
+			break;
+		}
 	}
 	for (Snake *snake : snakes)
 	{

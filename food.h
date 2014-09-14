@@ -26,7 +26,7 @@ public:
 	pair <int, int> pos;
 	void change_pos(vector<pair<int, int>> obstacles);
 	vector<pair<int, int>> get_unoccupied(vector<pair<int, int>> obstacles);
-	void draw_food(SDL_Surface* surface);
+	void draw_food(SDL_Renderer* renderer);
 };
 
 #endif

@@ -14,12 +14,13 @@ class Snake
 public:
 	enum direction { UP, DOWN, LEFT, RIGHT, NONE };
 	direction d;
-	Snake(int b);
-	Snake(int x, int y, int b);
+	Snake(SDL_Color c);
+	Snake(int x, int y, SDL_Color c);
 	SDL_Surface* img;
+	SDL_Color color;
 	// Snake has a vector containing body parts
 	vector<pair<int, int>> body;
-	void draw_snake(SDL_Surface* surface);
+	void draw_snake(SDL_Renderer* renderer);
 	void grow();
 	void print_body();
 	void move();

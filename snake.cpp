@@ -1,47 +1,29 @@
 #include "snake.h"
 
-Snake::Snake(int b)
+Snake::Snake(SDL_Color c)
 {
-	d = NONE;
-	// Set the snake image
-	switch (b)
-	{
-	case 1:
-		img = SDL_util::load_bmp("../Images/snake_body.bmp");
-		break;
-	case 2:
-		img = SDL_util::load_bmp("../Images/snake_body2.bmp");
-	}
+	color = c;
 	// Initialize snake position
 	pair <int, int> p(15, 15);
 	body.push_back(p);
 }
 
-Snake::Snake(int x, int y, int b)
+Snake::Snake(int x, int y, SDL_Color c)
 {
-	d = NONE;
-	// Set the snake image
-	switch (b)
-	{
-	case 1:
-		img = SDL_util::load_bmp("../Images/snake_body.bmp");
-		break;
-	case 2:
-		img = SDL_util::load_bmp("../Images/snake_body2.bmp");
-	}
-
+	color = c;
 	// Initialize snake position
 	pair <int, int> p(x, y);
 	body.push_back(p);
 }
 
 // Draw snake on the provided surface
-void Snake::draw_snake(SDL_Surface* surface)
+void Snake::draw_snake(SDL_Renderer* renderer)
 {
 	// Draw all elements in the vector stack
 	for (int i = 0; i < body.size(); i++)
 	{
-		SDL_BlitSurface(img, NULL, surface, SDL_util::create_rect(body.at(i).first * UNIT_SIZE, body.at(i).second * UNIT_SIZE, UNIT_SIZE, UNIT_SIZE));
+		SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+		SDL_RenderFillRect(renderer, SDL_util::create_rect(body.at(i).first * UNIT_SIZE, body.at(i).second * UNIT_SIZE, UNIT_SIZE, UNIT_SIZE));
 	}
 }
 

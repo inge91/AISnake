@@ -25,7 +25,8 @@ void Food::change_pos(vector<pair<int, int>> candidates)
 
 
 
-void Food::draw_food(SDL_Surface* surface)
+void Food::draw_food(SDL_Renderer* renderer)
 {
-	SDL_BlitSurface(img, NULL, surface, SDL_util::create_rect(pos.first * UNIT_SIZE, pos.second * UNIT_SIZE, UNIT_SIZE, UNIT_SIZE));
+	SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
+	SDL_RenderFillRect(renderer, SDL_util::create_rect(pos.first * UNIT_SIZE, pos.second * UNIT_SIZE, UNIT_SIZE, UNIT_SIZE));
 }
