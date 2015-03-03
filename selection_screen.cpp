@@ -12,10 +12,10 @@ Selection_screen::Selection_screen(SDL_Renderer* renderer)
 	
 }
 
-bool Selection_screen::handle_input(SDL_Event e)
+bool Selection_screen::handle_input(SDL_Event e, Screen* s)
 {
 	
-	if (!Screen::handle_input(e))
+	if (!Screen::handle_input(e, s))
 	{
 		return false;
 	}
@@ -29,7 +29,7 @@ void Selection_screen::execute_tick(SDL_Renderer* renderer)
 {
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 	SDL_RenderClear(renderer);
-	
+	std::cout << "here2" << std::endl;
 	draw_textures(renderer);
 	
 	SDL_RenderPresent(renderer);

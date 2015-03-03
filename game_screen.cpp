@@ -3,10 +3,10 @@
 Game_screen::Game_screen()
 	:b("../Levels/1.dat"){}
 
-bool Game_screen::handle_input(SDL_Event e)
+bool Game_screen::handle_input(SDL_Event e, Screen* s)
 {
 
-	if (!Screen::handle_input(e))
+	if (!Screen::handle_input(e, s))
 	{
 		return false;
 	}
